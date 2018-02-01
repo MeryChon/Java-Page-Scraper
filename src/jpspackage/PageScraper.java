@@ -10,7 +10,7 @@ import org.jsoup.select.Elements;
 import java.util.ArrayList;
 
 public class PageScraper {
-	private List<String> scrapedElements;
+	public List<String> scrapedElements;
 	public static final String LINK = "a";   
 	public static final String IMAGE = "img";
 	public static final String LINK_AND_IMAGE = "a.img";

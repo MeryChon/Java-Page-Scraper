@@ -24,6 +24,9 @@ public class ApplicationGUI {
 	private boolean scrapeLinks;
 	private boolean scrapeImages;
 	private String saveDirectory;
+	
+	private AppController controller;
+	private PageScraper pageScraper;
 
 	/**
 	 * Launch the application.
@@ -63,6 +66,9 @@ public class ApplicationGUI {
 		return newCenteredLabel;
 	}
 	
+	/*
+	 * 
+	 * */
 	private JTextField createTextField(int x, int y, int width, int height, int numColumns) {
 		JTextField newTextField = new JTextField();
 		newTextField.setBounds(x, y, width, height);
@@ -70,31 +76,39 @@ public class ApplicationGUI {
 		return newTextField;
 	}
 	
+	/*
+	 * 
+	 */
+	private JCheckBox createCheckbox(String text, int fontSize, int x, int y, int width, int height, boolean isChecked) {
+		JCheckBox newCheckbox = new JCheckBox(text);
+		newCheckbox.setFont(new Font("Monospaced", Font.PLAIN, fontSize));
+		newCheckbox.setBounds(x, y, 120, 25);
+		newCheckbox.setSelected(isChecked);
+		return newCheckbox;
+	}
+	
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+		pageScraper = new PageScraper();
+		controller = new AppController(pageScraper);
+		
 		frame = new JFrame();
 		frame.setBounds(100, 100, 450, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
 		urlTxtField = createTextField(73, 58, 230, 20, 20);
-//		urlTxtField = new JTextField();
-//		urlTxtField.setBounds(73, 58, 230, 20);
 		frame.getContentPane().add(urlTxtField);
-//		urlTxtField.setColumns(10);
 		
-		JCheckBox chckbxLinks = new JCheckBox("Links");
-		chckbxLinks.setFont(new Font("Monospaced", Font.PLAIN, 15));
-		chckbxLinks.setBounds(10, 95, 100, 25);
+		JCheckBox chckbxLinks = createCheckbox("Links", 14, 10, 95, 100, 25, false);
 		frame.getContentPane().add(chckbxLinks);
 		
-		JCheckBox chckbxImages = new JCheckBox("Images");
-		chckbxImages.setFont(new Font("Monospaced", Font.PLAIN, 15));
-		chckbxImages.setBounds(10, 120, 100, 25);
+		JCheckBox chckbxImages = createCheckbox("Images", 14, 10, 120, 100, 25, false);
 		frame.getContentPane().add(chckbxImages);
+		
 		
 		JButton btnSubmit = new JButton("Submit");
 		btnSubmit.addMouseListener(new MouseAdapter() {
@@ -103,7 +117,10 @@ public class ApplicationGUI {
 				urlToScrape = urlTxtField.getText();
 				scrapeLinks = chckbxLinks.isSelected();
 				scrapeImages = chckbxImages.isSelected();
+				if((!scrapeImages && !scrapeLinks) || urlToScrape.equals("")) return;
 				saveDirectory = txtFieldSaveDir.getText();
+				controller.scrapePage(urlToScrape, saveDirectory, scrapeLinks, scrapeImages);
+				System.out.println(pageScraper.scrapedElements.size());
 				System.out.println(urlToScrape + scrapeLinks + scrapeImages+ saveDirectory);
 			}
 		});
@@ -111,30 +128,20 @@ public class ApplicationGUI {
 		btnSubmit.setBounds(165, 200, 110, 40);
 		frame.getContentPane().add(btnSubmit);
 		
-//		txtFieldSaveDir = new JTextField();
-//		txtFieldSaveDir.setColumns(10);
-//		txtFieldSaveDir.setBounds(73, 158, 230, 20);
+
 		txtFieldSaveDir = createTextField(73, 158, 230, 20, 20);
 		frame.getContentPane().add(txtFieldSaveDir);
 		
 		
 		JLabel lblUrl = createLabel("URL: ", 12, false, 15, 60, 45, 15);
 		frame.getContentPane().add(lblUrl);
-//		JLabel lblUrl = new JLabel("URL:");
-//		lblUrl.setFont(new Font("Monospaced", Font.PLAIN, 13));
-//		lblUrl.setHorizontalAlignment(SwingConstants.CENTER);
-//		lblUrl.setBounds(15, 60, 45, 15);
-//		frame.getContentPane().add(lblUrl);
+
 		
 		JLabel lblSaveTo = createLabel("Save to:", 12, false, 10, 160, 60, 15);
 		frame.getContentPane().add(lblSaveTo);
 		
 		JLabel lblAppTitle = createLabel("Page Scraper", 22, true, 140, 10, 160, 35);
 		frame.getContentPane().add(lblAppTitle);
-//		JLabel lblAppTitle = new JLabel("Page Scraper");
-//		lblAppTitle.setFont(new Font("Monospaced", Font.BOLD, 22));
-//		lblAppTitle.setHorizontalAlignment(SwingConstants.CENTER);
-//		lblAppTitle.setBounds(140, 10, 160, 35);
-//		frame.getContentPane().add(lblAppTitle);
+
 	}
 }
