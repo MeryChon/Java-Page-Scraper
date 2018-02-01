@@ -1,14 +1,12 @@
 package jpspackage;
 
 import java.io.IOException;
-import java.util.HashSet;
 import java.util.List;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import java.util.Set;
 import java.util.ArrayList;
 
 public class PageScraper {
@@ -27,7 +25,6 @@ public class PageScraper {
 	 * Scrape all the links from the page and save their hyperlink references.
 	 * */
 	public void ScrapeLinks(Elements scrapedLinksRaw) {
-		int  count = 0;
 		for(Element elem: scrapedLinksRaw) {
 			this.scrapedElements.add(elem.absUrl(ATTR_HREF));
 		}
@@ -50,11 +47,9 @@ public class PageScraper {
 	public void ScrapeLinksAndImages(Elements scrapedLinksAndImagesRaw) {
 		for (Element e: scrapedLinksAndImagesRaw) {
 			if(e.hasAttr("href")) {
-//				System.out.println(e.attr("href"));
-				this.scrapedElements.add(e.absUrl("href"));
+				this.scrapedElements.add(e.absUrl(ATTR_HREF));
 			} else if(e.hasAttr("src")) {
-//				System.out.println(e.attr("src"));
-				this.scrapedElements.add(e.absUrl("src"));
+				this.scrapedElements.add(e.absUrl(ATTR_SRC));
 			} 
 		}
 	}
