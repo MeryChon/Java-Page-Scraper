@@ -26,7 +26,8 @@ public class PageScraper {
 	 * */
 	public void ScrapeLinks(Elements scrapedLinksRaw) {
 		for(Element elem: scrapedLinksRaw) {
-			this.scrapedElements.add(elem.absUrl(ATTR_HREF));
+			if(elem.hasAttr(ATTR_HREF))
+				this.scrapedElements.add(elem.absUrl(ATTR_HREF));
 		}
 	}
 	
@@ -35,7 +36,8 @@ public class PageScraper {
 	 * */
 	public void ScrapeImages(Elements scrapedImagesRaw) {
 		for(Element elem: scrapedImagesRaw) {
-			this.scrapedElements.add(elem.absUrl(ATTR_SRC));
+			if(elem.hasAttr(ATTR_SRC))
+				this.scrapedElements.add(elem.absUrl(ATTR_SRC));
 		}
 	}	
 	
@@ -45,14 +47,19 @@ public class PageScraper {
 	 * their appearance on the page.
 	 * */
 	public void ScrapeLinksAndImages(Elements scrapedLinksAndImagesRaw) {
+		int counterl = 0;
+		int counteri = 0;
 		for (Element e: scrapedLinksAndImagesRaw) {
-			System.out.println("HERE");
+			
 			if(e.hasAttr("href")) {
+				counterl++;
 				this.scrapedElements.add(e.absUrl(ATTR_HREF));
 			} else if(e.hasAttr("src")) {
+				counteri++;
 				this.scrapedElements.add(e.absUrl(ATTR_SRC));
 			} 
 		}
+		System.out.println("LINKS "+counterl+ "IMAGES "+counteri);
 	}
 	
 		
@@ -78,7 +85,7 @@ public class PageScraper {
 			break;
 		case LINK_AND_IMAGE:
 			System.out.println("SCRAPIN!!!!!!!!1");
-			this.ScrapeLinksAndImages(doc.select(LINK+", "+IMAGE));
+			this.ScrapeLinksAndImages(doc.select(IMAGE+", "+LINK));
 			break;
 		default:
 			System.out.println("This app does not support scraping for given tag"); //TODO error log?
