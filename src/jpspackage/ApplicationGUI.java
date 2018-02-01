@@ -8,6 +8,9 @@ import javax.swing.JTextArea;
 import java.awt.Font;
 import java.awt.Color;
 import javax.swing.UIManager;
+
+import com.sun.javafx.webkit.Accessor.PageAccessor;
+
 import javax.swing.JCheckBox;
 import javax.swing.JButton;
 import java.awt.event.MouseAdapter;
@@ -120,6 +123,18 @@ public class ApplicationGUI {
 				if((!scrapeImages && !scrapeLinks) || urlToScrape.equals("")) return;
 				saveDirectory = txtFieldSaveDir.getText();
 				controller.scrapePage(urlToScrape, saveDirectory, scrapeLinks, scrapeImages);
+//				String tagType = PageScraper.LINK;
+//				if(scrapeImages) {
+//					if(scrapeLinks) {
+//						tagType = PageScraper.LINK_AND_IMAGE;
+//					} else {
+//						tagType = PageScraper.IMAGE;
+//					}
+//				}				
+//				pageScraper.ScrapeURL(urlToScrape, tagType);
+				ResultsWindow rWindow = new ResultsWindow(pageScraper);
+				rWindow.setVisible(true);
+				
 				System.out.println(pageScraper.scrapedElements.size());
 				System.out.println(urlToScrape + scrapeLinks + scrapeImages+ saveDirectory);
 			}

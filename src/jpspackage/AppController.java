@@ -11,16 +11,18 @@ public class AppController{
 	
 	public void scrapePage(String url, String saveDir, boolean links, boolean images) {
 		String tagType;
-//		if(!links && !images) return;
+		if(!links && !images) return;
 		if(links) {
 			if(images) {
 				tagType = PageScraper.LINK_AND_IMAGE;
 			} else {
 				tagType = PageScraper.LINK;
 			}
+		} else {
+			tagType = PageScraper.IMAGE;
 		}
-		tagType = PageScraper.IMAGE;
-		this.pScraper.ScrapeURL(url, tagType);
+		
+		pScraper.ScrapeURL(url, tagType);
 	}
 
 }

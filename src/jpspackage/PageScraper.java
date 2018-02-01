@@ -18,7 +18,7 @@ public class PageScraper {
 	private static final String ATTR_SRC = "src";
 	
 	public PageScraper() {
-		this.scrapedElements = new ArrayList<String>();
+		
 	}
 	
 	/*
@@ -46,6 +46,7 @@ public class PageScraper {
 	 * */
 	public void ScrapeLinksAndImages(Elements scrapedLinksAndImagesRaw) {
 		for (Element e: scrapedLinksAndImagesRaw) {
+			System.out.println("HERE");
 			if(e.hasAttr("href")) {
 				this.scrapedElements.add(e.absUrl(ATTR_HREF));
 			} else if(e.hasAttr("src")) {
@@ -56,6 +57,7 @@ public class PageScraper {
 	
 		
 	public void ScrapeURL(String url, String tagType) {		
+		this.scrapedElements = new ArrayList<String>();
 		Document doc = null;
 		try {
 			doc = Jsoup.connect(url).timeout(60000).maxBodySize(0).get();		
@@ -67,12 +69,15 @@ public class PageScraper {
 		
 		switch(tagType) {
 		case LINK:
+			System.out.println("ONLY LINK");
 			this.ScrapeLinks(doc.getElementsByTag(LINK));
 			break;
 		case IMAGE:
+			System.out.println("ONLY IMAGE");
 			this.ScrapeImages(doc.getElementsByTag(IMAGE));
 			break;
 		case LINK_AND_IMAGE:
+			System.out.println("SCRAPIN!!!!!!!!1");
 			this.ScrapeLinksAndImages(doc.select(LINK+", "+IMAGE));
 			break;
 		default:
@@ -81,11 +86,16 @@ public class PageScraper {
 		}
 		
 		
-		int count = 0;
-		System.out.println(this.scrapedElements.size());
-		for(String s: this.scrapedElements) {
-			System.out.println(++count + s);
-		}
+//		int count = 0;
+//		System.out.println(this.scrapedElements.size());
+//		for(String s: this.scrapedElements) {
+//			System.out.println(++count + s);
+//		}
+	}
+	
+	
+	public ArrayList<String> GetScrapedElements() {
+		return new ArrayList<String>(this.scrapedElements);
 	}
 	
 	public void WriteParsedDataToFile(String fileName) {
