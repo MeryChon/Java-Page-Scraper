@@ -3,6 +3,7 @@ package jpspackage;
 import java.io.IOException;
 import java.util.List;
 
+import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -10,12 +11,18 @@ import org.jsoup.select.Elements;
 import java.util.ArrayList;
 
 public class PageScraper {
-	public List<String> scrapedElements;
 	public static final String LINK = "a";   
 	public static final String IMAGE = "img";
 	public static final String LINK_AND_IMAGE = "a.img";
 	private static final String ATTR_HREF = "href";
 	private static final String ATTR_SRC = "src";
+	public static final int CONNECTION_STATUS_OK = 0;
+	public static final int CONNECTION_STATUS_FAILED = 1;
+	public static final int ERR_INCORRECT_TAG = 2;
+	public static final int ERR_UNSUCCSESSFULL_GET = 3;
+	
+	public List<String> scrapedElements = null;
+
 	
 	public PageScraper() {
 		
@@ -24,7 +31,7 @@ public class PageScraper {
 	/*
 	 * Scrape all the links from the page and save their hyperlink references.
 	 * */
-	public void ScrapeLinks(Elements scrapedLinksRaw) {
+	private void ScrapeLinks(Elements scrapedLinksRaw) {
 		for(Element elem: scrapedLinksRaw) {
 			if(elem.hasAttr(ATTR_HREF))
 				this.scrapedElements.add(elem.absUrl(ATTR_HREF));
@@ -34,7 +41,7 @@ public class PageScraper {
 	/*
 	 * Scrape all the images from the page and save their source urls; 
 	 * */
-	public void ScrapeImages(Elements scrapedImagesRaw) {
+	private void ScrapeImages(Elements scrapedImagesRaw) {
 		for(Element elem: scrapedImagesRaw) {
 			if(elem.hasAttr(ATTR_SRC))
 				this.scrapedElements.add(elem.absUrl(ATTR_SRC));
@@ -46,7 +53,7 @@ public class PageScraper {
 	 * This way we get to save links and images in order of 
 	 * their appearance on the page.
 	 * */
-	public void ScrapeLinksAndImages(Elements scrapedLinksAndImagesRaw) {
+	private  void ScrapeLinksAndImages(Elements scrapedLinksAndImagesRaw) {
 		int counterl = 0;
 		int counteri = 0;
 		for (Element e: scrapedLinksAndImagesRaw) {
@@ -62,49 +69,64 @@ public class PageScraper {
 		System.out.println("LINKS "+counterl+ "IMAGES "+counteri);
 	}
 	
-		
-	public void ScrapeURL(String url, String tagType) {		
+	/**
+	 * Gets page with given url; Returns elements with requested tags (links and/or images);
+	 * @param url
+	 * @param tagType
+	 * @return
+	 */
+	public int ScrapeURL(String url, String tagType) {		
+		if(!CheckURL(url)) return CONNECTION_STATUS_FAILED; 
 		this.scrapedElements = new ArrayList<String>();
 		Document doc = null;
+		Connection conn = null;
 		try {
-			doc = Jsoup.connect(url).timeout(60000).maxBodySize(0).get();		
+			conn = Jsoup.connect(url);
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("Could not connect with the specified URL.");
+			return CONNECTION_STATUS_FAILED;
+		}
+		
+		try {
+			doc = conn.timeout(60000).maxBodySize(0).get();
 		} catch (IOException e) {
 			e.printStackTrace();
-			System.out.println("Could not connect with the specified URL."); //TODO error log
-			return;
+			return ERR_UNSUCCSESSFULL_GET;
 		}
 		
 		switch(tagType) {
 		case LINK:
-			System.out.println("ONLY LINK");
 			this.ScrapeLinks(doc.getElementsByTag(LINK));
 			break;
 		case IMAGE:
-			System.out.println("ONLY IMAGE");
 			this.ScrapeImages(doc.getElementsByTag(IMAGE));
 			break;
 		case LINK_AND_IMAGE:
-			System.out.println("SCRAPIN!!!!!!!!1");
 			this.ScrapeLinksAndImages(doc.select(IMAGE+", "+LINK));
 			break;
 		default:
-			System.out.println("This app does not support scraping for given tag"); //TODO error log?
-			return;
+			System.out.println("This app does not support scraping for given tag");
+			return ERR_INCORRECT_TAG;
 		}
-		
-		
-//		int count = 0;
-//		System.out.println(this.scrapedElements.size());
-//		for(String s: this.scrapedElements) {
-//			System.out.println(++count + s);
-//		}
+		return CONNECTION_STATUS_OK;
 	}
 	
-	
+	private boolean CheckURL(String url) {
+		return (url.startsWith("http://") && url.length() > 7) || (url.startsWith("https://") && url.length() > 8);
+	}
+
+	/**
+	 * Returns a copy of scraped elements list;
+	 * */
 	public ArrayList<String> GetScrapedElements() {
 		return new ArrayList<String>(this.scrapedElements);
 	}
 	
+	/**
+	 * 
+	 * @param fileName
+	 */
 	public void WriteParsedDataToFile(String fileName) {
 		
 	}

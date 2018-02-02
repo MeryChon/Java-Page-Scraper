@@ -5,13 +5,13 @@ import java.awt.event.ActionListener;
 
 public class AppController{
 	private PageScraper pScraper;
+	public static final int TAGS_NOT_SELECTED = -1;
 	public AppController(PageScraper pageScraper) {
 		this.pScraper = pageScraper;
 	}
 	
-	public void scrapePage(String url, String saveDir, boolean links, boolean images) {
+	public int  scrapePage(String url, String saveDir, boolean links, boolean images) {
 		String tagType;
-		if(!links && !images) return;
 		if(links) {
 			if(images) {
 				tagType = PageScraper.LINK_AND_IMAGE;
@@ -22,7 +22,7 @@ public class AppController{
 			tagType = PageScraper.IMAGE;
 		}
 		
-		pScraper.ScrapeURL(url, tagType);
+		return pScraper.ScrapeURL(url, tagType);
 	}
 
 }

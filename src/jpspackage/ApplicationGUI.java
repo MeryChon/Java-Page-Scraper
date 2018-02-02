@@ -4,12 +4,7 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JTextField;
-import javax.swing.JTextArea;
 import java.awt.Font;
-import java.awt.Color;
-import javax.swing.UIManager;
-
-import com.sun.javafx.webkit.Accessor.PageAccessor;
 
 import javax.swing.JCheckBox;
 import javax.swing.JButton;
@@ -34,24 +29,28 @@ public class ApplicationGUI {
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					ApplicationGUI window = new ApplicationGUI();
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+//	public static void main(String[] args) {
+//		EventQueue.invokeLater(new Runnable() {
+//			public void run() {
+//				try {
+//					ApplicationGUI window = new ApplicationGUI();
+//					window.frame.setVisible(true);
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		});
+//	}
 
 	/**
 	 * Create the application.
 	 */
 	public ApplicationGUI() {
 		initialize();
+	}
+	
+	public void setFrameVisibility(boolean isVisible) {
+		this.frame.setVisible(isVisible);
 	}
 	
 	/*
@@ -122,21 +121,27 @@ public class ApplicationGUI {
 				scrapeImages = chckbxImages.isSelected();
 				if((!scrapeImages && !scrapeLinks) || urlToScrape.equals("")) return;
 				saveDirectory = txtFieldSaveDir.getText();
-				controller.scrapePage(urlToScrape, saveDirectory, scrapeLinks, scrapeImages);
-//				String tagType = PageScraper.LINK;
-//				if(scrapeImages) {
-//					if(scrapeLinks) {
-//						tagType = PageScraper.LINK_AND_IMAGE;
-//					} else {
-//						tagType = PageScraper.IMAGE;
-//					}
-//				}				
-//				pageScraper.ScrapeURL(urlToScrape, tagType);
-				ResultsWindow rWindow = new ResultsWindow(pageScraper);
-				rWindow.setVisible(true);
-				
-				System.out.println(pageScraper.scrapedElements.size());
-				System.out.println(urlToScrape + scrapeLinks + scrapeImages+ saveDirectory);
+				int response = controller.scrapePage(urlToScrape, saveDirectory, scrapeLinks, scrapeImages);
+				switch(response) {
+				case PageScraper.CONNECTION_STATUS_OK:	
+					ResultsWindow rWindow = new ResultsWindow(pageScraper);
+					rWindow.setVisible(true);
+					System.out.println(pageScraper.scrapedElements.size());
+					System.out.println(urlToScrape + scrapeLinks + scrapeImages+ saveDirectory);
+					break;
+				case PageScraper.CONNECTION_STATUS_FAILED:
+					ErrorWindow connectionErrorWindow = new ErrorWindow("Connection failed because of a malformed url.");
+					connectionErrorWindow.setVisible(true);
+					break;
+				case PageScraper.ERR_UNSUCCSESSFULL_GET:
+					ErrorWindow getErrorWindow = new ErrorWindow("Couldn't get the requested page.");
+					getErrorWindow.setVisible(true);
+					break;
+				default:
+					ErrorWindow errorWindow = new ErrorWindow("Something went wrong.");
+					errorWindow.setVisible(true);
+					break;
+				}				
 			}
 		});
 		btnSubmit.setFont(new Font("Monospaced", Font.PLAIN, 16));
