@@ -1,9 +1,9 @@
 package jpspackage;
 
 import java.io.IOException;
-import java.sql.Date;
+//import java.sql.Date;
 import java.sql.SQLException;
-import java.util.List;
+//import java.util.List;
 import java.util.Set;
 
 import org.jsoup.Connection;
@@ -11,6 +11,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -25,17 +26,17 @@ public class PageScraper {
 	public static final int ERR_INCORRECT_TAG = 2;
 	public static final int ERR_UNSUCCSESSFULL_GET = 3;
 	
-	private List<String> scrapedElements = null;
-	private Set<DBEntry> dbEntries = null; 
+//	private List<String> scrapedElements = null;
+//	private Set<DBEntry> dbEntries = null; 
 	private Set<String> scrapedLinks = null;
 	private Set<String> scrapedImages = null;
-	private java.util.Date currDate;
+//	private java.util.Date currDate;
 	private DBObject dbObj;
 
 	
 	public PageScraper() {
 		dbObj = new DBObject();
-		dbEntries = new HashSet<DBEntry>();
+//		dbEntries = new HashSet<DBEntry>();
 	}
 	
 	/*
@@ -45,9 +46,7 @@ public class PageScraper {
 		for(Element elem: scrapedLinksRaw) {
 			if(elem.hasAttr(ATTR_HREF)) {
 				String href = elem.absUrl(ATTR_HREF);
-//				this.scrapedElements.add(href);
 				scrapedLinks.add(href);
-//				this.dbEntries.add(new DBEntry(DBEntry.INFO_LINK, href));
 			}
 		}
 	}
@@ -59,9 +58,7 @@ public class PageScraper {
 		for(Element elem: scrapedImagesRaw) {
 			if(elem.hasAttr(ATTR_SRC)) {
 				String src = elem.absUrl(ATTR_SRC);
-//				this.scrapedElements.add(src);
 				scrapedImages.add(src);
-//				this.dbEntries.add(new DBEntry(DBEntry.INFO_IMAGE, src));
 			}
 		}
 	}	
@@ -78,16 +75,14 @@ public class PageScraper {
 			
 			if(e.hasAttr("href")) {
 				counterl++;
-//				this.scrapedElements.add(e.absUrl(ATTR_HREF));
 				String href = e.absUrl(ATTR_HREF);
-				this.scrapedElements.add(href);
-				this.dbEntries.add(new DBEntry(DBEntry.INFO_LINK, href));
+				scrapedLinks.add(href);
+//				dbEntries.add(new DBEntry(DBEntry.INFO_LINK, href));
 			} else if(e.hasAttr("src")) {
 				counteri++;
-//				this.scrapedElements.add(e.absUrl(ATTR_SRC));
 				String src = e.absUrl(ATTR_SRC);
-				this.scrapedElements.add(src);
-				this.dbEntries.add(new DBEntry(DBEntry.INFO_IMAGE, src));
+				scrapedImages.add(src);
+//				dbEntries.add(new DBEntry(DBEntry.INFO_IMAGE, src));
 			} 
 		}
 		System.out.println("LINKS "+counterl+ "IMAGES "+counteri);
@@ -100,7 +95,6 @@ public class PageScraper {
 	 * @return
 	 */
 	public int ScrapeURL(String url, String tagType) {	
-//		this.currDate = new java.util.Date();
 		if(!CheckURL(url)) return CONNECTION_STATUS_FAILED; 
 		Document doc = null;
 		Connection conn = null;
@@ -118,7 +112,6 @@ public class PageScraper {
 			return ERR_UNSUCCSESSFULL_GET;
 		}
 		
-//		this.scrapedElements = new ArrayList<String>();
 		switch(tagType) {
 		case LINK:
 			scrapedLinks = new HashSet<String>();
@@ -151,8 +144,7 @@ public class PageScraper {
 	/**
 	 * Returns a copy of scraped elements list;
 	 * */
-	public ArrayList<String> GetScrapedElements() {
-//		return new ArrayList<String>(this.scrapedElements);
+	public ArrayList<String> getScrapedElements() {
 		ArrayList<String> result = new ArrayList<String>();
 		if(scrapedLinks != null) {
 			for(String link:scrapedLinks) {
@@ -166,7 +158,15 @@ public class PageScraper {
 		}		
 		return result;
 	}
+
 	
+	public ArrayList<String> getScrapedImages() {
+		return new ArrayList<String>(scrapedImages);
+	}
+	
+	public ArrayList<String> getScrapedLinks() {
+		return new ArrayList<>(scrapedLinks);
+	}
 	/*
 	 * 
 	 * @param fileName
@@ -174,24 +174,19 @@ public class PageScraper {
 	private void WriteScrapedDataToFile(String url) {
 		if(scrapedLinks != null) {
 			try {
-				dbObj.addLinks(url, scrapedLinks);
+				dbObj.addScrapedData(url, scrapedLinks, DBObject.TABLE_SCRAPED_LINKS);
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
 		}
 		
 		if(scrapedImages != null) {
-			dbObj.addImageSources(url, scrapedImages);
+			try {
+				dbObj.addScrapedData(url, scrapedImages, DBObject.TABLE_SCRAPED_IMAGE_SOURCES);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
-		
-		
-//		for(DBEntry dbe: this.dbEntries) {
-//			if(dbe.getType() == DBEntry.INFO_LINK) {
-//				dbObj.addLinks(url, dbe.getInfo());
-//			} else {
-//				dbObj.addImageSources(url, dbe.getInfo());
-//			}
-//		}	
 	}
 
 	

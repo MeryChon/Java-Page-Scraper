@@ -1,7 +1,5 @@
 package jpspackage;
 
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JTextField;
 import java.awt.Font;
@@ -125,13 +123,13 @@ public class ApplicationGUI {
 				int response = controller.scrapePage(urlToScrape, saveDirectory, scrapeLinks, scrapeImages);
 				switch(response) {
 				case PageScraper.CONNECTION_STATUS_OK:	
-					ResultsWindow rWindow = new ResultsWindow(pageScraper);
+					ResultsWindow rWindow = new ResultsWindow(pageScraper, scrapeLinks, scrapeImages);
 					rWindow.setVisible(true);
 //					System.out.println(pageScraper.scrapedElements.size());
 					System.out.println(urlToScrape + scrapeLinks + scrapeImages+ saveDirectory);
 					break;
 				case PageScraper.CONNECTION_STATUS_FAILED:
-					ErrorWindow connectionErrorWindow = new ErrorWindow("Connection failed because of a malformed url.");
+					ErrorWindow connectionErrorWindow = new ErrorWindow("Connection failed due to a malformed url.");
 					connectionErrorWindow.setVisible(true);
 					break;
 				case PageScraper.ERR_UNSUCCSESSFULL_GET:

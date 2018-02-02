@@ -33,7 +33,7 @@ public class ResultsWindow extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public ResultsWindow(PageScraper pageScraper) {
+	public ResultsWindow(PageScraper pageScraper, boolean showLinks, boolean showImages) {
 		setBounds(100, 100, 450, 300);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -62,8 +62,17 @@ public class ResultsWindow extends JDialog {
 		buttonPane.add(okButton);
 		getRootPane().setDefaultButton(okButton);
 		
-		
-		ArrayList<String> results = pageScraper.GetScrapedElements();
+		ArrayList<String> results =  new ArrayList<String>();
+		if(showLinks) {
+			if(showImages) {
+				results = pageScraper.getScrapedElements();
+			} else {
+				results = pageScraper.getScrapedLinks();
+			}			
+		} else if(showImages) {
+			results = pageScraper.getScrapedImages();
+		}
+				
 		for(String el: results) {
 			resultArea.append(el + '\n');
 		}
