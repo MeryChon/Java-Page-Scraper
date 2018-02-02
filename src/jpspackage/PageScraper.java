@@ -1,7 +1,9 @@
 package jpspackage;
 
 import java.io.IOException;
+import java.sql.Date;
 import java.util.List;
+import java.util.Set;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -9,6 +11,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class PageScraper {
 	public static final String LINK = "a";   
@@ -21,11 +24,15 @@ public class PageScraper {
 	public static final int ERR_INCORRECT_TAG = 2;
 	public static final int ERR_UNSUCCSESSFULL_GET = 3;
 	
-	public List<String> scrapedElements = null;
+	private List<String> scrapedElements = null;
+	private Set<DBEntry> dbEntries = null; 
+	private java.util.Date currDate;
+	private DBObject dbObj;
 
 	
 	public PageScraper() {
-		
+		dbObj = new DBObject();
+		dbEntries = new HashSet<DBEntry>();
 	}
 	
 	/*
@@ -33,8 +40,11 @@ public class PageScraper {
 	 * */
 	private void ScrapeLinks(Elements scrapedLinksRaw) {
 		for(Element elem: scrapedLinksRaw) {
-			if(elem.hasAttr(ATTR_HREF))
-				this.scrapedElements.add(elem.absUrl(ATTR_HREF));
+			if(elem.hasAttr(ATTR_HREF)) {
+				String href = elem.absUrl(ATTR_HREF);
+				this.scrapedElements.add(href);
+				this.dbEntries.add(new DBEntry(DBEntry.INFO_LINK, href));
+			}
 		}
 	}
 	
@@ -43,8 +53,11 @@ public class PageScraper {
 	 * */
 	private void ScrapeImages(Elements scrapedImagesRaw) {
 		for(Element elem: scrapedImagesRaw) {
-			if(elem.hasAttr(ATTR_SRC))
-				this.scrapedElements.add(elem.absUrl(ATTR_SRC));
+			if(elem.hasAttr(ATTR_SRC)) {
+				String src = elem.absUrl(ATTR_SRC);
+				this.scrapedElements.add(src);
+				this.dbEntries.add(new DBEntry(DBEntry.INFO_IMAGE, src));
+			}
 		}
 	}	
 	
@@ -60,10 +73,16 @@ public class PageScraper {
 			
 			if(e.hasAttr("href")) {
 				counterl++;
-				this.scrapedElements.add(e.absUrl(ATTR_HREF));
+//				this.scrapedElements.add(e.absUrl(ATTR_HREF));
+				String href = e.absUrl(ATTR_HREF);
+				this.scrapedElements.add(href);
+				this.dbEntries.add(new DBEntry(DBEntry.INFO_LINK, href));
 			} else if(e.hasAttr("src")) {
 				counteri++;
-				this.scrapedElements.add(e.absUrl(ATTR_SRC));
+//				this.scrapedElements.add(e.absUrl(ATTR_SRC));
+				String src = e.absUrl(ATTR_SRC);
+				this.scrapedElements.add(src);
+				this.dbEntries.add(new DBEntry(DBEntry.INFO_IMAGE, src));
 			} 
 		}
 		System.out.println("LINKS "+counterl+ "IMAGES "+counteri);
@@ -75,7 +94,8 @@ public class PageScraper {
 	 * @param tagType
 	 * @return
 	 */
-	public int ScrapeURL(String url, String tagType) {		
+	public int ScrapeURL(String url, String tagType) {	
+		this.currDate = new java.util.Date();
 		if(!CheckURL(url)) return CONNECTION_STATUS_FAILED; 
 		this.scrapedElements = new ArrayList<String>();
 		Document doc = null;
@@ -109,6 +129,7 @@ public class PageScraper {
 			System.out.println("This app does not support scraping for given tag");
 			return ERR_INCORRECT_TAG;
 		}
+		this.WriteScrapedDataToFile();
 		return CONNECTION_STATUS_OK;
 	}
 	
@@ -123,11 +144,12 @@ public class PageScraper {
 		return new ArrayList<String>(this.scrapedElements);
 	}
 	
-	/**
+	/*
 	 * 
 	 * @param fileName
 	 */
-	public void WriteParsedDataToFile(String fileName) {
+	private void WriteScrapedDataToFile() {
+		dbObj.addLink();
 		
 	}
 

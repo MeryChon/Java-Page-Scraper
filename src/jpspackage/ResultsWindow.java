@@ -1,19 +1,17 @@
 package jpspackage;
 
 import java.awt.BorderLayout;
-import java.awt.FlowLayout;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import javax.swing.JComboBox;
 import javax.swing.JTextArea;
-import javax.swing.JTextPane;
-import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class ResultsWindow extends JDialog {
 
@@ -50,13 +48,19 @@ public class ResultsWindow extends JDialog {
 		resultArea.setEditable(false);
 		scrollPane.setViewportView(resultArea);
 
-//		JPanel buttonPane = new JPanel();
+		JPanel buttonPane = new JPanel();
 //		buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
-//		getContentPane().add(buttonPane, BorderLayout.SOUTH);
-//		JButton okButton = new JButton("OK");
-//		okButton.setActionCommand("OK");
-//		buttonPane.add(okButton);
-//		getRootPane().setDefaultButton(okButton);
+		getContentPane().add(buttonPane, BorderLayout.SOUTH);
+		JButton okButton = new JButton("OK");
+		okButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				dispose();
+			}
+		});
+		okButton.setActionCommand("OK");
+		buttonPane.add(okButton);
+		getRootPane().setDefaultButton(okButton);
 		
 		
 		ArrayList<String> results = pageScraper.GetScrapedElements();

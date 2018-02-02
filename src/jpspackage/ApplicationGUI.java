@@ -101,6 +101,7 @@ public class ApplicationGUI {
 		frame.setBounds(100, 100, 450, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
+		frame.setResizable(false);
 		
 		urlTxtField = createTextField(73, 58, 230, 20, 20);
 		frame.getContentPane().add(urlTxtField);
@@ -126,7 +127,7 @@ public class ApplicationGUI {
 				case PageScraper.CONNECTION_STATUS_OK:	
 					ResultsWindow rWindow = new ResultsWindow(pageScraper);
 					rWindow.setVisible(true);
-					System.out.println(pageScraper.scrapedElements.size());
+//					System.out.println(pageScraper.scrapedElements.size());
 					System.out.println(urlToScrape + scrapeLinks + scrapeImages+ saveDirectory);
 					break;
 				case PageScraper.CONNECTION_STATUS_FAILED:
