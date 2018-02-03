@@ -150,42 +150,6 @@ public class DBObject {
 		closeConnection(conn);
 	}
 	
-//	public void addImageSources(String url, Set<String> scrapedImages) throws SQLException {
-//		Connection conn = getConnection();
-//		int urlID = getURLid(url, conn);
-//		if(urlID < 0) {
-//			System.out.println("need to add new url");
-//			urlID = addURL(url, conn);
-//		}
-//		String queryImagesForGivenURL = "SELECT image_src FROM "+TABLE_SCRAPED_IMAGE_SOURCES+" WHERE url_id = "
-//											+ urlID + ";";
-//		System.out.println(queryImagesForGivenURL);
-//	}
-	
-	
-//	public void addLinks(String url, Set<String> scrapedLinks) throws SQLException {
-//		Connection conn = getConnection();
-//		int urlID = getURLid(url, conn);
-//		if(urlID < 0) {
-//			System.out.println("need to add new url");
-//			urlID = addURL(url, conn);
-//		}
-//		String queryLinksForGivenURL = "SELECT link_url FROM "+TABLE_SCRAPED_LINKS+" WHERE url_id = "
-//																								+ urlID + ";";
-//		System.out.println(queryLinksForGivenURL);
-//		ResultSet rs = getResultSet(queryLinksForGivenURL, conn);
-//		Set<String> linksInDatabase = new HashSet<String>();
-//		while(rs.next()) {
-//			linksInDatabase.add(rs.getString("link_url"));
-//		}
-//		for(String link: scrapedLinks) {
-//			if(!linksInDatabase.contains(link)) {
-//				addLink(link, urlID, conn);
-//			}
-//		}		
-//		closeConnection(conn);
-//	}
-	
 	
 	private int addEntry(String data, int urlId, String tableName, Connection conn) {
 		String attrName = (tableName.equals(TABLE_SCRAPED_LINKS)) ? "link_url":"image_src";
@@ -202,25 +166,4 @@ public class DBObject {
 		return executeUpdate(query, conn);		
 	}
 
-//	public boolean addLink(String url, String link) throws SQLException {
-//		Connection conn = this.getConnection();
-//		int urlID = getURLid(url, conn);
-//		if (urlID >= 0) {
-//			System.out.println("URL already in database");
-//		} else {
-//			String urlsQuery = "INSERT INTO " + TABLE_URLS+" (url) VALUES " + " ('"+ url + "');";
-//			urlID = executeUpdate(urlsQuery, conn);
-//		}
-//		String linksQuery = "INSERT INTO "+TABLE_SCRAPED_LINKS+" (url_id, link_url) VALUES ('"+ urlID + ", "
-//				+ "'"+link+"');";
-//		int linkId = executeUpdate(linksQuery, conn);
-//		
-//		closeConnection(conn);
-//		return true;
-//		
-//	}
-	
-//	public void addImageSources(String url, Set<String> imageSources) {
-//		System.out.println("NEED TO ADD IMAGE");
-//	}
 }

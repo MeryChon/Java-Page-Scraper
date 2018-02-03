@@ -148,16 +148,16 @@ public class ApplicationGUI {
 		frame.getContentPane().add(btnSubmit);
 		
 
-		txtFieldSaveDir = createTextField(73, 158, 230, 20, 20);
-		frame.getContentPane().add(txtFieldSaveDir);
+//		txtFieldSaveDir = createTextField(73, 158, 230, 20, 20);
+//		frame.getContentPane().add(txtFieldSaveDir);
 		
 		
 		JLabel lblUrl = createLabel("URL: ", 12, false, 15, 60, 45, 15);
 		frame.getContentPane().add(lblUrl);
 
 		
-		JLabel lblSaveTo = createLabel("Save to:", 12, false, 10, 160, 60, 15);
-		frame.getContentPane().add(lblSaveTo);
+//		JLabel lblSaveTo = createLabel("Save to:", 12, false, 10, 160, 60, 15);
+//		frame.getContentPane().add(lblSaveTo);
 		
 		JLabel lblAppTitle = createLabel("Page Scraper", 22, true, 140, 10, 160, 35);
 		frame.getContentPane().add(lblAppTitle);
