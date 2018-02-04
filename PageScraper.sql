@@ -24,3 +24,6 @@ CREATE TABLE IF NOT EXISTS scraped_image_sources (
     url_id int not null, 
     image_src varchar(400)
 );
+
+
+select * from visited_urls;

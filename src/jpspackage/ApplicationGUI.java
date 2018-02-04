@@ -119,7 +119,7 @@ public class ApplicationGUI {
 				scrapeLinks = chckbxLinks.isSelected();
 				scrapeImages = chckbxImages.isSelected();
 				if((!scrapeImages && !scrapeLinks) || urlToScrape.equals("")) return;
-				saveDirectory = txtFieldSaveDir.getText();
+//				saveDirectory = txtFieldSaveDir.getText();
 				int response = controller.scrapePage(urlToScrape, saveDirectory, scrapeLinks, scrapeImages);
 				switch(response) {
 				case PageScraper.CONNECTION_STATUS_OK:	
