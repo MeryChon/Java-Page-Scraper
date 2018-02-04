@@ -27,9 +27,8 @@ public class DBObject {
 		}
 	}
 	
-	/*
-	 * 
-	 */
+
+	
 	private Connection getConnection() {
 		try {
 			String connect = "jdbc:mysql://" + MYSQL_DATABASE_SERVER + "/" + MYSQL_DATABASE_NAME;
@@ -94,12 +93,13 @@ public class DBObject {
 		return id;
 	}
 	
+	
 	/*
 	 * Get id of a table entry with given url;
 	 */
 	private int getURLid(String url, Connection conn) throws SQLException {
 		String query = "SELECT * FROM "+TABLE_URLS+" WHERE url like '"+url+"';";
-		System.out.println(query);
+//		System.out.println(query);
 		ResultSet rs = this.getResultSet(query, conn);
 		if(!rs.next()) {
 			return -1;
@@ -119,7 +119,6 @@ public class DBObject {
 		Connection conn = getConnection();
 		int urlID = getURLid(url, conn);
 		if(urlID < 0) {
-			System.out.println("need to add new url");
 			urlID = addURL(url, conn);
 		}
 		String tableAttrName = "link_url";	//TODO: if instead of s/c ?
@@ -135,7 +134,6 @@ public class DBObject {
 		}
 		String queryExistingDataForGivenURL = "SELECT " + tableAttrName+ " FROM "+tableName
 																		+" WHERE url_id = " + urlID + ";";
-		System.out.println(queryExistingDataForGivenURL);
 		ResultSet rs = getResultSet(queryExistingDataForGivenURL, conn);
 		Set<String> existingData = new HashSet<String>();
 		
@@ -156,13 +154,12 @@ public class DBObject {
 		String query = "INSERT INTO "+tableName+" (url_id, " + attrName +") VALUES ("+urlId+", "
 				+ "'" + data + "');";
 		int newLinkEntryId = executeUpdate(query, conn);
-		return newLinkEntryId;
-		
+		return newLinkEntryId;		
 	}
 
 	private int addURL(String url, Connection conn) {
 		String query = "INSERT INTO "+TABLE_URLS+" (url) VALUES ('"+ url +"');";
-		System.out.println(query);
+//		System.out.println(query);
 		return executeUpdate(query, conn);		
 	}
 

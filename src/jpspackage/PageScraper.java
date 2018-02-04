@@ -26,17 +26,14 @@ public class PageScraper {
 	public static final int ERR_INCORRECT_TAG = 2;
 	public static final int ERR_UNSUCCSESSFULL_GET = 3;
 	
-//	private List<String> scrapedElements = null;
-//	private Set<DBEntry> dbEntries = null; 
+ 
 	private Set<String> scrapedLinks = null;
 	private Set<String> scrapedImages = null;
-//	private java.util.Date currDate;
 	private DBObject dbObj;
 
 	
 	public PageScraper() {
 		dbObj = new DBObject();
-//		dbEntries = new HashSet<DBEntry>();
 	}
 	
 	/*
@@ -77,12 +74,10 @@ public class PageScraper {
 				counterl++;
 				String href = e.absUrl(ATTR_HREF);
 				scrapedLinks.add(href);
-//				dbEntries.add(new DBEntry(DBEntry.INFO_LINK, href));
 			} else if(e.hasAttr("src")) {
 				counteri++;
 				String src = e.absUrl(ATTR_SRC);
 				scrapedImages.add(src);
-//				dbEntries.add(new DBEntry(DBEntry.INFO_IMAGE, src));
 			} 
 		}
 		System.out.println("LINKS "+counterl+ "IMAGES "+counteri);
@@ -164,13 +159,12 @@ public class PageScraper {
 		return new ArrayList<String>(scrapedImages);
 	}
 	
+	
 	public ArrayList<String> getScrapedLinks() {
 		return new ArrayList<>(scrapedLinks);
 	}
-	/*
-	 * 
-	 * @param fileName
-	 */
+	
+	
 	private void WriteScrapedDataToFile(String url) {
 		if(scrapedLinks != null) {
 			try {
@@ -188,7 +182,4 @@ public class PageScraper {
 			}
 		}
 	}
-
-	
-
 }
