@@ -24,21 +24,6 @@ public class ApplicationGUI {
 	private AppController controller;
 	private PageScraper pageScraper;
 
-	/**
-	 * Launch the application.
-	 */
-//	public static void main(String[] args) {
-//		EventQueue.invokeLater(new Runnable() {
-//			public void run() {
-//				try {
-//					ApplicationGUI window = new ApplicationGUI();
-//					window.frame.setVisible(true);
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		});
-//	}
 
 	/**
 	 * Create the application.
@@ -119,8 +104,7 @@ public class ApplicationGUI {
 				scrapeLinks = chckbxLinks.isSelected();
 				scrapeImages = chckbxImages.isSelected();
 				if((!scrapeImages && !scrapeLinks) || urlToScrape.equals("")) return;
-//				saveDirectory = txtFieldSaveDir.getText();
-				int response = controller.scrapePage(urlToScrape, saveDirectory, scrapeLinks, scrapeImages);
+				int response = controller.scrapePage(urlToScrape, scrapeLinks, scrapeImages);
 				switch(response) {
 				case PageScraper.CONNECTION_STATUS_OK:	
 					ResultsWindow rWindow = new ResultsWindow(pageScraper, scrapeLinks, scrapeImages);
@@ -147,18 +131,9 @@ public class ApplicationGUI {
 		btnSubmit.setBounds(165, 200, 110, 40);
 		frame.getContentPane().add(btnSubmit);
 		
-
-//		txtFieldSaveDir = createTextField(73, 158, 230, 20, 20);
-//		frame.getContentPane().add(txtFieldSaveDir);
-		
-		
 		JLabel lblUrl = createLabel("URL: ", 12, false, 15, 60, 45, 15);
 		frame.getContentPane().add(lblUrl);
 
-		
-//		JLabel lblSaveTo = createLabel("Save to:", 12, false, 10, 160, 60, 15);
-//		frame.getContentPane().add(lblSaveTo);
-		
 		JLabel lblAppTitle = createLabel("Page Scraper", 22, true, 140, 10, 160, 35);
 		frame.getContentPane().add(lblAppTitle);
 

@@ -10,7 +10,7 @@ public class AppController{
 		this.pScraper = pageScraper;
 	}
 	
-	public int  scrapePage(String url, String saveDir, boolean links, boolean images) {
+	public int  scrapePage(String url, boolean links, boolean images) {
 		String tagType;
 		if(links) {
 			if(images) {
